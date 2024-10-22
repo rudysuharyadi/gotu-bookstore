@@ -1,0 +1,11 @@
+with-expecter: true
+inpackage: True
+dir: mocks/{{ replaceAll .InterfaceDirRelative "internal" "internal_" }}
+mockname: "{{.InterfaceName}}"
+outpkg: "{{.PackageName}}"
+filename: "{{.InterfaceName}}.go"
+all: True
+packages:
+  gotu-bookstore:
+    config:
+      recursive: true

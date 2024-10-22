@@ -1,0 +1,1331 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Online Bookstore API",
+        "version": "1.0.0",
+        "description": "API for managing an online bookstore"
+    },
+    "paths": {
+        "/account-service/v1/login": {
+            "post": {
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/LoginRequest",
+                                "properties": {
+                                    "email": {
+                                        "format": "email",
+                                        "type": "string"
+                                    },
+                                    "password": {
+                                        "format": "password",
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/LoginResponse",
+                                    "properties": {
+                                        "token": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "description": "Login successful"
+                    },
+                    "400": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GenericErrorResponse"
+                                }
+                            }
+                        },
+                        "description": "Bad Request Error"
+                    }
+                },
+                "summary": "Login customer"
+            }
+        },
+        "/account-service/v1/register": {
+            "post": {
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/RegisterRequest",
+                                "properties": {
+                                    "email": {
+                                        "format": "email",
+                                        "type": "string"
+                                    },
+                                    "password": {
+                                        "format": "password",
+                                        "type": "string"
+                                    },
+                                    "firstName": {
+                                        "type": "string"
+                                    },
+                                    "lastName": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "201": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RegisterResponse"
+                                }
+                            }
+                        },
+                        "description": "Customer created successfully"
+                    },
+                    "400": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GenericErrorResponse"
+                                }
+                            }
+                        },
+                        "description": "Invalid input or email already exists"
+                    }
+                },
+                "summary": "Register a new customer"
+            }
+        },
+        "/product-service/v1/books": {
+            "get": {
+                "parameters": [
+                    {
+                        "name": "page",
+                        "schema": {
+                            "default": 1,
+                            "type": "integer"
+                        },
+                        "in": "query"
+                    },
+                    {
+                        "name": "limit",
+                        "schema": {
+                            "default": 10,
+                            "type": "integer"
+                        },
+                        "in": "query"
+                    },
+                    {
+                        "name": "search",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "query"
+                    },
+                    {
+                        "name": "last_id",
+                        "description": "",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GetPaginatedBooksResponse",
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer"
+                                                    },
+                                                    "title": {
+                                                        "type": "string"
+                                                    },
+                                                    "author": {
+                                                        "type": "string"
+                                                    },
+                                                    "price": {
+                                                        "type": "number"
+                                                    },
+                                                    "description": {
+                                                        "type": "string"
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        "pagination": {
+                                            "type": "object",
+                                            "properties": {
+                                                "total": {
+                                                    "type": "integer"
+                                                },
+                                                "pages": {
+                                                    "type": "integer"
+                                                },
+                                                "current_page": {
+                                                    "type": "integer"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "description": "List of books"
+                    }
+                },
+                "summary": "Get list of books"
+            }
+        },
+        "/product-service/v1/books/{bookId}": {
+            "get": {
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GetBookResponse"
+                                }
+                            }
+                        },
+                        "description": "Success"
+                    },
+                    "404": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GenericErrorResponse"
+                                }
+                            }
+                        },
+                        "description": "Book not found"
+                    }
+                },
+                "summary": "Get book by id"
+            },
+            "parameters": [
+                {
+                    "name": "bookId",
+                    "schema": {
+                        "type": "string"
+                    },
+                    "in": "path",
+                    "required": true
+                }
+            ]
+        },
+        "/order-service/v1/shopping-cart": {
+            "get": {
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ShoppingCartResponse"
+                                }
+                            }
+                        },
+                        "description": "Success"
+                    },
+                    "401": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GenericErrorResponse"
+                                }
+                            }
+                        },
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "summary": "Retrieve current user shopping cart"
+            },
+            "post": {
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ShoppingCartItemRequest"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ShoppingCartResponse"
+                                }
+                            }
+                        },
+                        "description": "Success"
+                    },
+                    "400": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GenericErrorResponse"
+                                }
+                            }
+                        },
+                        "description": "Bad request error"
+                    },
+                    "401": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GenericErrorResponse"
+                                }
+                            }
+                        },
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "summary": "Add item to shopping cart."
+            }
+        },
+        "/order-service/v1/shopping-cart/checkout": {
+            "post": {
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ShoppingCartCheckoutResponse"
+                                }
+                            }
+                        },
+                        "description": "Success"
+                    }
+                },
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "summary": "To checkout current cart"
+            }
+        },
+        "/order-service/v1/shopping-cart/clear": {
+            "post": {
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ShoppingCartClearResponse"
+                                }
+                            }
+                        },
+                        "description": "Success"
+                    }
+                },
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "summary": "Remove all items from shopping cart"
+            }
+        },
+        "/order-service/v1/transactions": {
+            "get": {
+                "parameters": [
+                    {
+                        "name": "page",
+                        "schema": {
+                            "default": 1,
+                            "type": "integer"
+                        },
+                        "in": "query"
+                    },
+                    {
+                        "name": "limit",
+                        "schema": {
+                            "default": 10,
+                            "type": "integer"
+                        },
+                        "in": "query"
+                    },
+                    {
+                        "name": "last_id",
+                        "description": "",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "query"
+                    },
+                    {
+                        "name": "search",
+                        "description": "",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GetPaginatedTransactionResponse",
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer"
+                                                    },
+                                                    "total_amount": {
+                                                        "type": "number"
+                                                    },
+                                                    "status": {
+                                                        "type": "string"
+                                                    },
+                                                    "order_date": {
+                                                        "format": "date-time",
+                                                        "type": "string"
+                                                    },
+                                                    "items": {
+                                                        "type": "array",
+                                                        "items": {
+                                                            "type": "object",
+                                                            "properties": {
+                                                                "book_id": {
+                                                                    "type": "integer"
+                                                                },
+                                                                "title": {
+                                                                    "type": "string"
+                                                                },
+                                                                "quantity": {
+                                                                    "type": "integer"
+                                                                },
+                                                                "unit_price": {
+                                                                    "type": "number"
+                                                                },
+                                                                "subtotal": {
+                                                                    "type": "number"
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "description": "List of transactions"
+                    }
+                },
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "summary": "Get transactions history"
+            }
+        },
+        "/order-service/v1/transactions/{transactionId}": {
+            "get": {
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GetTransactionResponse"
+                                }
+                            }
+                        },
+                        "description": "Success"
+                    }
+                },
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "summary": "Get transaction details"
+            },
+            "parameters": [
+                {
+                    "name": "transactionId",
+                    "schema": {
+                        "type": "string"
+                    },
+                    "in": "path",
+                    "required": true
+                }
+            ]
+        },
+        "/account-service/v1/logout/": {
+            "post": {
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/LogoutResponse"
+                                }
+                            }
+                        },
+                        "description": "Success"
+                    }
+                },
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/account-service/v1/refresh-token/": {
+            "post": {
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/RefreshTokenRequest"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RefreshTokenResponse"
+                                }
+                            }
+                        },
+                        "description": "Success"
+                    },
+                    "401": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GenericErrorResponse"
+                                }
+                            }
+                        },
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ]
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "LoginRequest": {
+                "title": "Root Type for LoginRequest",
+                "description": "",
+                "type": "object",
+                "properties": {
+                    "email": {
+                        "type": "string"
+                    },
+                    "password": {
+                        "type": "string"
+                    }
+                },
+                "example": {
+                    "email": "rudy.suharyadi@gmail.com",
+                    "password": ""
+                }
+            },
+            "LoginResponse": {
+                "title": "Root Type for LoginResponse",
+                "description": "",
+                "required": [],
+                "type": "object",
+                "properties": {
+                    "status": {
+                        "type": "string"
+                    },
+                    "data": {
+                        "$ref": "#/components/schemas/TokenDTO",
+                        "description": ""
+                    }
+                },
+                "example": {
+                    "status": "success",
+                    "data": {
+                        "access_token": "token",
+                        "refresh_token": "token"
+                    }
+                }
+            },
+            "RegisterRequest": {
+                "title": "Root Type for RegisterRequest",
+                "description": "",
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string"
+                    },
+                    "email": {
+                        "type": "string"
+                    },
+                    "password": {
+                        "type": "string"
+                    },
+                    "confirm_password": {
+                        "type": "string"
+                    }
+                },
+                "example": {
+                    "name": "Rudy Suharyadi",
+                    "email": "rudy.suharyadi@gmail.com",
+                    "password": "",
+                    "confirm_password": ""
+                }
+            },
+            "RegisterResponse": {
+                "title": "Root Type for RegisterResponse",
+                "description": "",
+                "type": "object",
+                "properties": {
+                    "status": {
+                        "type": "string"
+                    }
+                },
+                "example": {
+                    "status": "success"
+                }
+            },
+            "BooksDTO": {
+                "title": "Root Type for BooksDTO",
+                "description": "",
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    },
+                    "author": {
+                        "type": "string"
+                    },
+                    "title": {
+                        "type": "string"
+                    },
+                    "description": {
+                        "type": "string"
+                    },
+                    "category": {
+                        "type": "string"
+                    },
+                    "publisher": {
+                        "type": "string"
+                    },
+                    "publish_date": {
+                        "type": "string"
+                    },
+                    "price": {
+                        "type": "string"
+                    },
+                    "discount_rate": {
+                        "type": "string"
+                    },
+                    "discount_amount": {
+                        "type": "string"
+                    },
+                    "language": {
+                        "type": "string"
+                    },
+                    "isbn": {
+                        "type": "string"
+                    },
+                    "image_url": {
+                        "type": "string"
+                    },
+                    "page": {
+                        "type": "string"
+                    },
+                    "rating": {
+                        "type": "string"
+                    },
+                    "created_at": {
+                        "format": "date-time",
+                        "type": "string"
+                    },
+                    "updated_at": {
+                        "format": "date-time",
+                        "type": "string"
+                    },
+                    "deleted_at": {
+                        "format": "date-time",
+                        "type": "string"
+                    }
+                },
+                "example": {
+                    "id": "uuid",
+                    "author": "Sarah Andersen",
+                    "title": "Sarah's Scribbles",
+                    "description": "Sarah's Scribbles is a webcomic by Sarah Andersen started in 2011.",
+                    "category": "webcomic",
+                    "publisher": "Tapas Media",
+                    "publish_date": "2021",
+                    "price": "18.99",
+                    "discount_rate": "10%",
+                    "discount_amount": "1.89",
+                    "language": "english",
+                    "isbn": "9788833140940",
+                    "image_url": "",
+                    "page": "150",
+                    "rating": "4.5",
+                    "created_at": "2023-02-01T01:01:01+0700",
+                    "updated_at": "2023-02-01T01:01:01+0700",
+                    "deleted_at": "2023-02-01T01:01:01+0700"
+                }
+            },
+            "GetPaginatedBooksResponse": {
+                "title": "Root Type for GetPaginatedBooksResponse",
+                "description": "",
+                "type": "object",
+                "properties": {
+                    "status": {
+                        "type": "string"
+                    },
+                    "data": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/BooksDTO"
+                        }
+                    },
+                    "metadata": {
+                        "$ref": "#/components/schemas/PaginationMetadataDTO",
+                        "properties": {
+                            "size": {
+                                "format": "int32",
+                                "type": "integer"
+                            },
+                            "page": {
+                                "format": "int32",
+                                "type": "integer"
+                            },
+                            "limit": {
+                                "format": "int32",
+                                "type": "integer"
+                            },
+                            "last_id": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                },
+                "example": {
+                    "status": "success",
+                    "data": [
+                        {
+                            "id": "uuid",
+                            "author": "Sarah Andersen",
+                            "title": "Sarah's Scribbles",
+                            "description": "Sarah's Scribbles is a webcomic by Sarah Andersen started in 2011.",
+                            "category": "webcomic",
+                            "publisher": "Tapas Media",
+                            "publish_date": "2021",
+                            "price": "18.99",
+                            "discount_rate": "10%",
+                            "discount_amount": "1.89",
+                            "language": "english",
+                            "isbn": "9788833140940",
+                            "image_url": "",
+                            "page": "150",
+                            "rating": "4.5",
+                            "created_at": "2023-02-01T01:01:01+0700",
+                            "updated_at": "2023-02-01T01:01:01+0700",
+                            "deleted_at": "2023-02-01T01:01:01+0700"
+                        }
+                    ],
+                    "metadata": {
+                        "size": 1000,
+                        "page": 2,
+                        "limit": 100,
+                        "last_id": "uuid"
+                    }
+                }
+            },
+            "PaginationMetadataDTO": {
+                "title": "Root Type for PaginationMetadataDTO",
+                "description": "",
+                "type": "object",
+                "properties": {
+                    "size": {
+                        "format": "int32",
+                        "type": "integer"
+                    },
+                    "page": {
+                        "format": "int32",
+                        "type": "integer"
+                    },
+                    "limit": {
+                        "format": "int32",
+                        "type": "integer"
+                    },
+                    "last_id": {
+                        "type": "string"
+                    }
+                },
+                "example": {
+                    "size": 1000,
+                    "page": 2,
+                    "limit": 100,
+                    "last_id": "uuid"
+                }
+            },
+            "GetBookResponse": {
+                "title": "Root Type for GetBookResponse",
+                "description": "",
+                "type": "object",
+                "properties": {
+                    "status": {
+                        "type": "string"
+                    },
+                    "data": {
+                        "$ref": "#/components/schemas/BooksDTO",
+                        "properties": {
+                            "id": {
+                                "type": "string"
+                            },
+                            "author": {
+                                "type": "string"
+                            },
+                            "title": {
+                                "type": "string"
+                            },
+                            "description": {
+                                "type": "string"
+                            },
+                            "category": {
+                                "type": "string"
+                            },
+                            "publisher": {
+                                "type": "string"
+                            },
+                            "publish_date": {
+                                "type": "string"
+                            },
+                            "price": {
+                                "type": "string"
+                            },
+                            "discount_rate": {
+                                "type": "string"
+                            },
+                            "discount_amount": {
+                                "type": "string"
+                            },
+                            "language": {
+                                "type": "string"
+                            },
+                            "isbn": {
+                                "type": "string"
+                            },
+                            "image_url": {
+                                "type": "string"
+                            },
+                            "page": {
+                                "type": "string"
+                            },
+                            "rating": {
+                                "type": "string"
+                            },
+                            "created_at": {
+                                "format": "date-time",
+                                "type": "string"
+                            },
+                            "updated_at": {
+                                "format": "date-time",
+                                "type": "string"
+                            },
+                            "deleted_at": {
+                                "format": "date-time",
+                                "type": "string"
+                            }
+                        }
+                    }
+                },
+                "example": {
+                    "status": "success",
+                    "data": {
+                        "id": "uuid",
+                        "author": "Sarah Andersen",
+                        "title": "Sarah's Scribbles",
+                        "description": "Sarah's Scribbles is a webcomic by Sarah Andersen started in 2011.",
+                        "category": "webcomic",
+                        "publisher": "Tapas Media",
+                        "publish_date": "2021",
+                        "price": "18.99",
+                        "discount_rate": "10%",
+                        "discount_amount": "1.89",
+                        "language": "english",
+                        "isbn": "9788833140940",
+                        "image_url": "",
+                        "page": "150",
+                        "rating": "4.5",
+                        "created_at": "2023-02-01T01:01:01+0700",
+                        "updated_at": "2023-02-01T01:01:01+0700",
+                        "deleted_at": "2023-02-01T01:01:01+0700"
+                    }
+                }
+            },
+            "GenericErrorResponse": {
+                "title": "Root Type for BadRequestErrorResponse",
+                "description": "",
+                "required": [],
+                "type": "object",
+                "properties": {
+                    "status_code": {
+                        "format": "int32",
+                        "type": "integer"
+                    },
+                    "status": {
+                        "type": "string"
+                    },
+                    "code": {
+                        "type": "string"
+                    },
+                    "timestamp": {
+                        "format": "date-time",
+                        "type": "string"
+                    },
+                    "internal_code": {
+                        "type": "string"
+                    },
+                    "message": {
+                        "type": "string"
+                    }
+                },
+                "example": {
+                    "status_code": 400,
+                    "status": "failure",
+                    "code": "Bad Request Error",
+                    "timestamp": "2024-10-19T10:42:38+07:00",
+                    "internal_code": "MAINSERVICE-IC0053",
+                    "message": "Username and password does't match."
+                }
+            },
+            "ShoppingCartItemRequest": {
+                "title": "Root Type for ShoppingCartItemRequest",
+                "description": "",
+                "type": "object",
+                "properties": {
+                    "book_id": {
+                        "type": "string"
+                    },
+                    "quantity": {
+                        "type": "integer"
+                    }
+                },
+                "example": {
+                    "book_id": "uuid",
+                    "quantity": 1
+                }
+            },
+            "ShoppingCartResponse": {
+                "title": "Root Type for ShoppingCartResponse",
+                "description": "",
+                "type": "object",
+                "properties": {
+                    "status": {
+                        "type": "string"
+                    },
+                    "data": {
+                        "$ref": "#/components/schemas/ShoppingCartDTO"
+                    }
+                },
+                "example": {
+                    "status": "success",
+                    "data": {
+                        "grand_total": "24.99",
+                        "items": [
+                            {
+                                "book_id": "uuid",
+                                "quantity": 1
+                            }
+                        ]
+                    }
+                }
+            },
+            "ShoppingCartItemDTO": {
+                "title": "Root Type for ShoppingCartItemDTO",
+                "description": "",
+                "type": "object",
+                "properties": {
+                    "book_id": {
+                        "type": "string"
+                    },
+                    "quantity": {
+                        "type": "integer"
+                    }
+                },
+                "example": {
+                    "book_id": "uuid",
+                    "quantity": 1
+                }
+            },
+            "ShoppingCartClearResponse": {
+                "title": "Root Type for ShoppingCartClearResponse",
+                "description": "",
+                "type": "object",
+                "properties": {
+                    "status": {
+                        "type": "string"
+                    }
+                },
+                "example": {
+                    "status": "success"
+                }
+            },
+            "ShoppingCartCheckoutResponse": {
+                "title": "Root Type for ShoppingCartCheckoutResponse",
+                "description": "",
+                "type": "object",
+                "properties": {
+                    "status": {
+                        "type": "string"
+                    },
+                    "data": {
+                        "$ref": "#/components/schemas/ShoppingCartCheckoutDTO",
+                        "properties": {
+                            "invoice_number": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                },
+                "example": {
+                    "status": "success",
+                    "data": {
+                        "invoice_number": "inv-0001"
+                    }
+                }
+            },
+            "ShoppingCartCheckoutDTO": {
+                "title": "Root Type for ShoppingCartCheckoutDTO",
+                "description": "",
+                "type": "object",
+                "properties": {
+                    "invoice_number": {
+                        "type": "string"
+                    }
+                },
+                "example": {
+                    "invoice_number": "inv-0001"
+                }
+            },
+            "TransactionDTO": {
+                "title": "Root Type for TransactionDTO",
+                "description": "",
+                "type": "object",
+                "properties": {
+                    "invoice_number": {
+                        "type": "string"
+                    },
+                    "grand_total": {
+                        "type": "string"
+                    },
+                    "status": {
+                        "type": "string"
+                    },
+                    "created_at": {
+                        "format": "date-time",
+                        "type": "string"
+                    },
+                    "items": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/TransactionItemDTO"
+                        }
+                    }
+                },
+                "example": {
+                    "invoice_number": "inv-001",
+                    "grand_total": "24.59",
+                    "status": "CONFIRMED",
+                    "created_at": "2023-02-01T01:01:01+0700",
+                    "items": [
+                        {
+                            "book_id": "uuid",
+                            "quantity": 1,
+                            "price": "10.00"
+                        }
+                    ]
+                }
+            },
+            "TransactionItemDTO": {
+                "title": "Root Type for TransactionItemDTO",
+                "description": "",
+                "type": "object",
+                "properties": {
+                    "book_id": {
+                        "type": "string"
+                    },
+                    "quantity": {
+                        "format": "int32",
+                        "type": "integer"
+                    },
+                    "price": {
+                        "type": "string"
+                    }
+                },
+                "example": {
+                    "book_id": "uuid",
+                    "quantity": 1,
+                    "price": "10.00"
+                }
+            },
+            "GetPaginatedTransactionResponse": {
+                "title": "Root Type for GetPaginatedTransactionResponse",
+                "description": "",
+                "type": "object",
+                "properties": {
+                    "status": {
+                        "type": "string"
+                    },
+                    "data": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/TransactionDTO"
+                        }
+                    }
+                },
+                "example": {
+                    "status": "success",
+                    "data": [
+                        {
+                            "invoice_number": "inv-001",
+                            "grand_total": "24.59",
+                            "status": "CONFIRMED",
+                            "created_at": "2023-02-01T01:01:01+0700",
+                            "items": [
+                                {
+                                    "book_id": "uuid",
+                                    "quantity": 1,
+                                    "price": "10.00"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            },
+            "GetTransactionResponse": {
+                "title": "Root Type for GetTransactionResponse",
+                "description": "",
+                "type": "object",
+                "properties": {
+                    "status": {
+                        "type": "string"
+                    },
+                    "data": {
+                        "$ref": "#/components/schemas/TransactionDTO",
+                        "properties": {
+                            "invoice_number": {
+                                "type": "string"
+                            },
+                            "grand_total": {
+                                "type": "string"
+                            },
+                            "status": {
+                                "type": "string"
+                            },
+                            "created_at": {
+                                "format": "date-time",
+                                "type": "string"
+                            },
+                            "items": {
+                                "type": "array",
+                                "items": {
+                                    "type": "object",
+                                    "properties": {
+                                        "book_id": {
+                                            "type": "string"
+                                        },
+                                        "quantity": {
+                                            "format": "int32",
+                                            "type": "integer"
+                                        },
+                                        "price": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "example": {
+                    "status": "success",
+                    "data": {
+                        "invoice_number": "inv-001",
+                        "grand_total": "24.59",
+                        "status": "CONFIRMED",
+                        "created_at": "2023-02-01T01:01:01+0700",
+                        "items": [
+                            {
+                                "book_id": "uuid",
+                                "quantity": 1,
+                                "price": "10.00"
+                            }
+                        ]
+                    }
+                }
+            },
+            "RefreshTokenRequest": {
+                "title": "Root Type for RefreshTokenRequest",
+                "description": "",
+                "type": "object",
+                "properties": {
+                    "refresh_token": {
+                        "type": "string"
+                    }
+                },
+                "example": {
+                    "refresh_token": "token"
+                }
+            },
+            "TokenDTO": {
+                "title": "Root Type for LoginDTO",
+                "description": "",
+                "type": "object",
+                "properties": {
+                    "access_token": {
+                        "type": "string"
+                    },
+                    "refresh_token": {
+                        "type": "string"
+                    }
+                },
+                "example": {
+                    "access_token": "token",
+                    "refresh_token": "token"
+                }
+            },
+            "RefreshTokenResponse": {
+                "title": "Root Type for RefreshTokenResponse",
+                "description": "",
+                "type": "object",
+                "properties": {
+                    "status": {
+                        "type": "string"
+                    },
+                    "data": {
+                        "$ref": "#/components/schemas/TokenDTO",
+                        "properties": {
+                            "access_token": {
+                                "type": "string"
+                            },
+                            "refresh_token": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                },
+                "example": {
+                    "status": "success",
+                    "data": {
+                        "access_token": "token",
+                        "refresh_token": "token"
+                    }
+                }
+            },
+            "LogoutResponse": {
+                "title": "Root Type for LogoutResponse",
+                "description": "",
+                "type": "object",
+                "properties": {
+                    "status": {
+                        "type": "string"
+                    }
+                },
+                "example": {
+                    "status": "success"
+                }
+            },
+            "ShoppingCartDTO": {
+                "title": "Root Type for ShoppingCartDTO",
+                "description": "",
+                "type": "object",
+                "properties": {
+                    "grand_total": {
+                        "type": "string"
+                    },
+                    "items": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/ShoppingCartItemDTO"
+                        },
+                        "properties": {
+                            "book_id": {
+                                "type": "string"
+                            },
+                            "quantity": {
+                                "format": "int32",
+                                "type": "integer"
+                            }
+                        }
+                    }
+                },
+                "example": {
+                    "grand_total": "24.99",
+                    "items": [
+                        {
+                            "book_id": "uuid",
+                            "quantity": 1
+                        }
+                    ]
+                }
+            }
+        },
+        "securitySchemes": {
+            "BearerAuth": {
+                "scheme": "bearer",
+                "type": "http"
+            }
+        }
+    }
+}

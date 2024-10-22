@@ -1,0 +1,448 @@
+{
+	"info": {
+		"_postman_id": "6283749e-5852-479b-b77e-7d50cfbbfc57",
+		"name": "GoTu Bookstore",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "2647851"
+	},
+	"item": [
+		{
+			"name": "Account Service",
+			"item": [
+				{
+					"name": "Logout",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base-url}}/account-service/v1/logout",
+							"host": [
+								"{{base-url}}"
+							],
+							"path": [
+								"account-service",
+								"v1",
+								"logout"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Refresh Token",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"refresh_token\": \"eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCJ9.eyJFbWFpbCI6InJ1ZHkuc3VoYXJ5YWRpQGdtYWlsLmNvbSIsIklkIjoiMDE5MmI0N2UtOGY1ZS03ODY4LTgxYTEtMDA2N2YwOWNjZjg3IiwiZXhwIjoxNzMyMjM0ODQ0fQ.-2qJXKodMp6w_J4EOhCMZCi-9yaTvRr9x4I_uinx7o9ZYFMnCFbVDvvDsVsOWSv85NseJoCW0IZV0Ks1TylOEg\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base-url}}/account-service/v1/refresh-token",
+							"host": [
+								"{{base-url}}"
+							],
+							"path": [
+								"account-service",
+								"v1",
+								"refresh-token"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"if (jsonData.status == \"success\") {",
+									"  pm.collectionVariables.set(\"bearer-token\", jsonData.data.access_token);",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"rudy.suharyadi@gmail.com\",\n    \"password\": \"123456\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base-url}}/account-service/v1/login",
+							"host": [
+								"{{base-url}}"
+							],
+							"path": [
+								"account-service",
+								"v1",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Register",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"confirm_password\": \"123456\",\n    \"email\": \"rudy.suharyadi@gmail.com\",\n    \"name\": \"Rudy Suharyadi\",\n    \"password\": \"123456\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base-url}}/account-service/v1/register/",
+							"host": [
+								"{{base-url}}"
+							],
+							"path": [
+								"account-service",
+								"v1",
+								"register",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Product Service",
+			"item": [
+				{
+					"name": "Get Books",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base-url}}/product-service/v1/books?page=0&limit=3&sort_by=title&desc=",
+							"host": [
+								"{{base-url}}"
+							],
+							"path": [
+								"product-service",
+								"v1",
+								"books"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "limit",
+									"value": "3"
+								},
+								{
+									"key": "sort_by",
+									"value": "title"
+								},
+								{
+									"key": "desc",
+									"value": ""
+								},
+								{
+									"key": "keyword",
+									"value": "sarah",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Book Details",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base-url}}/product-service/v1/books/:book_id",
+							"host": [
+								"{{base-url}}"
+							],
+							"path": [
+								"product-service",
+								"v1",
+								"books",
+								":book_id"
+							],
+							"variable": [
+								{
+									"key": "book_id",
+									"value": "0192a860-84a4-74d8-ac0f-6f558a55f078"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Order Service",
+			"item": [
+				{
+					"name": "Add Edit Delete Item to Cart",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"book_id\": \"0192a860-84a4-74d8-ac0f-6f558a55f078\",\n    \"quantity\": 1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base-url}}/order-service/v1/shopping-cart",
+							"host": [
+								"{{base-url}}"
+							],
+							"path": [
+								"order-service",
+								"v1",
+								"shopping-cart"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Transactions",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base-url}}/order-service/v1/transactions?limit=10&page=0&sort_by&desc",
+							"host": [
+								"{{base-url}}"
+							],
+							"path": [
+								"order-service",
+								"v1",
+								"transactions"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "10"
+								},
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "sort_by",
+									"value": null
+								},
+								{
+									"key": "desc",
+									"value": null
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Transaction Details",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"book_id\": \"0192a860-84a4-74d8-ac0f-6f558a55f078\",\n    \"quantity\": 1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base-url}}/order-service/v1/transactions/:transaction_id",
+							"host": [
+								"{{base-url}}"
+							],
+							"path": [
+								"order-service",
+								"v1",
+								"transactions",
+								":transaction_id"
+							],
+							"variable": [
+								{
+									"key": "transaction_id",
+									"value": "0192b48a-0cf3-766c-80d8-af9376ed096c"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Shopping Cart",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base-url}}/order-service/v1/shopping-cart",
+							"host": [
+								"{{base-url}}"
+							],
+							"path": [
+								"order-service",
+								"v1",
+								"shopping-cart"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Clear Shopping Cart",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base-url}}/order-service/v1/shopping-cart/clear",
+							"host": [
+								"{{base-url}}"
+							],
+							"path": [
+								"order-service",
+								"v1",
+								"shopping-cart",
+								"clear"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Checkout Shopping Cart",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base-url}}/order-service/v1/shopping-cart/checkout",
+							"host": [
+								"{{base-url}}"
+							],
+							"path": [
+								"order-service",
+								"v1",
+								"shopping-cart",
+								"checkout"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCJ9.eyJFbWFpbCI6InJ1ZHkuc3VoYXJ5YWRpQGdtYWlsLmNvbSIsIklkIjoiMDE5MmI0N2UtOGY1ZS03ODY4LTgxYTEtMDA2N2YwOWNjZjg3IiwiZXhwIjoxNzMwMjA5OTQxfQ._w4HklX_FAKe77QZY8v9suS63m86rDcFa6fnuu-PAFIyXBcxpNx5tGmYyhZMlfzvhlf6hEi2gmreYnFKRsAL-w",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base-url",
+			"value": "localhost:4041"
+		},
+		{
+			"key": "bearer-token",
+			"value": ""
+		}
+	]
+}
