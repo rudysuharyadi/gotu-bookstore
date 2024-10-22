@@ -160,5 +160,3 @@ You can found the api-spec.json in root folder. There is also postman collection
 | /order-service/v1/shopping-cart/checkout       | POST   | Checkout                                     |
 | /order-service/v1/transactions                 | GET    | Get history transaction from existing user   |
 | /order-service/v1/transactions/:transaction_id | GET    | Get transaction details                      |
-
-## ERD
