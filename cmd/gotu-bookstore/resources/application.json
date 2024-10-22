@@ -1,6 +1,5 @@
 {
   "SERVER_APP_MODE":"development",
-  "SERVER_APP_BASE_URL":"http://mylocal",
   "SERVER_APP_HOST":"localip",
   "SERVER_APP_PORT":4041,
   "SERVER_GLOBAL_TIMEOUT": 15,
