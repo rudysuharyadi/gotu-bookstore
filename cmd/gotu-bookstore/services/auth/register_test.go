@@ -37,7 +37,7 @@ func (suite *RegisterServiceTestSuite) SetupTest() {
 	c.Set(constants.AccessTokenContext, "token")
 	suite.context = utils.NewCommonContext(c, nil, nil)
 	suite.fakeUserRepo = mockery.NewUserRepoInterface(suite.T())
-	suite.fakeUserValidator = mockery.NewAuthServiceInterface(suite.T())
+	suite.fakeUserValidator = mockery.NewUserValidatorInterface(suite.T())
 	suite.fakeAuthService = mockery.NewAuthServiceInterface(suite.T())
 	suite.authConfig = config.AuthConfig{}
 	suite.service = auth.NewRegisterService(
@@ -68,8 +68,8 @@ func (suite *RegisterServiceTestSuite) TestRegister() {
 	}
 
 	suite.fakeUserValidator.EXPECT().Validate(request).Return(nil)
-	suite.fakeAuthService.EXPECT().HashPassword(refresh.Password).Return("hashed", nil)
-	suite.fakeUserRepo.EXPECT().Create(mock.Anything).Return(user, nil)
+	suite.fakeAuthService.EXPECT().HashPassword(request.Password).Return("hashed", nil)
+	suite.fakeUserRepo.EXPECT().Create(mock.Anything).Return(&user, nil)
 
 	response, err := suite.service.ProcessingRegister(request)
 
