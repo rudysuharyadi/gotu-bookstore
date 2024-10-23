@@ -122,6 +122,29 @@ In VSCode, you can set launch.json to be something like this
 }
 ```
 
+## Run on Docker
+
+You can compile the app and run it in docker.
+First, you need to change the ip address on application.json inside resources folder
+
+| Key             | Value                      |
+| --------------- | -------------------------- |
+| SERVER_APP_HOST | "0.0.0.0"                  |
+| DATABASE_HOST   | "your.postgres.ip.address" |
+| REDIS_HOST      | "your.redis.ip.address"    |
+
+Then create docker container
+
+```
+docker build -t gotu-bookstore .
+```
+
+Run the container
+
+```
+docker run -d --name gotu-bookstore -p 4041:4041 gotu-bookstore
+```
+
 ## Test
 
 To run the test, simply just execute command:
