@@ -10,9 +10,17 @@ cd gotu-bookstore
 go mod download
 ```
 
+## Docker
+
+To run this application, you need PostgreSQL and Redis. You can simply just run docker compose.
+
+```
+docker compose up
+```
+
 ## Setup
 
-To run this server, we need to setup PostgreSQL and Redis. Setup can be found in the application.json inside resources folder.
+Setup can be found in the application.json inside resources folder.
 
 ```
 cmd/gotu-bookstore/resource/application.json
@@ -20,35 +28,35 @@ cmd/gotu-bookstore/resource/application.json
 
 ### Server
 
-| Server Setup    | Value          |
-| --------------- | -------------- |
-| SERVER_APP_MODE | "development"  |
-| SERVER_APP_HOST | "192.168.50.2" |
-| SERVER_APP_PORT | 4041           |
+| Server Setup    | Value         |
+| --------------- | ------------- |
+| SERVER_APP_MODE | "development" |
+| SERVER_APP_HOST | "127.0.0.1"   |
+| SERVER_APP_PORT | 4041          |
 
 ### Database
 
-| Database Setup             | Value          |
-| -------------------------- | -------------- |
-| DATABASE_DB_NAME           | gotu           |
-| DATABASE_HOST              | "192.168.50.2" |
-| DATABASE_PORT              | 5432           |
-| DATABASE_USERNAME          | "postgres"     |
-| DATABASE_PASSWORD          | "postgres"     |
-| DATABASE_MAX_IDDLE_CONN    | 5              |
-| DATABASE_MAX_OPEN_CONN     | 10             |
-| DATABASE_CONN_MAX_LIFETIME | 1              |
-| DATABASE_LOG_MODE          | 1              |
+| Database Setup             | Value       |
+| -------------------------- | ----------- |
+| DATABASE_DB_NAME           | gotu        |
+| DATABASE_HOST              | "127.0.0.1" |
+| DATABASE_PORT              | 5432        |
+| DATABASE_USERNAME          | "postgres"  |
+| DATABASE_PASSWORD          | "postgres"  |
+| DATABASE_MAX_IDDLE_CONN    | 5           |
+| DATABASE_MAX_OPEN_CONN     | 10          |
+| DATABASE_CONN_MAX_LIFETIME | 1           |
+| DATABASE_LOG_MODE          | 1           |
 
 ### Redis
 
-| Redis Setup                    | Value          |
-| ------------------------------ | -------------- |
-| REDIS_HOST                     | "192.168.50.2" |
-| REDIS_PORT                     | 6379           |
-| REDIS_DEFAULT_CACHE_EXPIRATION | 2592000        |
-| REDIS_USERNAME                 | "default"      |
-| REDIS_PASSWORD                 | "redis"        |
+| Redis Setup                    | Value       |
+| ------------------------------ | ----------- |
+| REDIS_HOST                     | "127.0.0.1" |
+| REDIS_PORT                     | 6379        |
+| REDIS_DEFAULT_CACHE_EXPIRATION | 2592000     |
+| REDIS_USERNAME                 | "default"   |
+| REDIS_PASSWORD                 | "redis"     |
 
 ### Auth
 
