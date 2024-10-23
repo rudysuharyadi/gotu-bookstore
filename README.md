@@ -71,7 +71,6 @@ cmd/gotu-bookstore/resource/application.json
 For authentication key, we can use existing key in the application.json. You can generate a new one and replace it.
 
 Generate a Private Key:
-Use the openssl ecparam command to generate a private key with the P-256 curve (also known as prime256v1), which corresponds to ES256:
 
 ```
 openssl ecparam -name prime256v1 -genkey -noout -out private_key.pem
@@ -80,7 +79,6 @@ openssl ecparam -name prime256v1 -genkey -noout -out private_key.pem
 This command generates a private key and saves it in the private_key.pem file.
 
 Extract the Public Key from the Private Key:
-You can extract the public key from the private key using the openssl ec command:
 
 ```
 openssl ec -in private_key.pem -pubout -out public_key.pem
@@ -94,7 +92,7 @@ Command to generate a 256-bit (32-byte) random key:
 openssl rand -hex 32
 ```
 
-This command generates 32 random bytes and then converts them to a hexadecimal string representation. Each byte consists of two hexadecimal characters, resulting in a 64-character string (32 bytes \* 2 characters/byte = 64 characters).
+This command generates 32 random bytes and then converts them to a hexadecimal string representation.
 
 ## Run Server
 
@@ -191,3 +189,9 @@ You can found the api-spec.json in root folder. There is also postman collection
 | /order-service/v1/shopping-cart/checkout       | POST   | Checkout                                     |
 | /order-service/v1/transactions                 | GET    | Get history transaction from existing user   |
 | /order-service/v1/transactions/:transaction_id | GET    | Get transaction details                      |
+
+## ERD
+
+ERD can also be found in bookstore-erd.mermain in root folder.
+
+![image](erd.png)

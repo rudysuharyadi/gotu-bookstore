@@ -1,0 +1,56 @@
+erDiagram
+    users ||--o{ transactions: hasMany
+    books ||--o{ transaction_items: includesIn 
+    transactions ||--|{ transaction_items: hasMany
+    users ||--o{ shopping_carts: hasMany
+    books ||--o{ shopping_carts: includesIn 
+    
+    users {
+        uuid id PK
+        varchar name
+        varchar email UK
+        text password
+        varchar status
+    }
+
+    books {
+        uuid id PK
+        varchar author
+        varchar title
+        text description
+        varchar category
+        varchar publisher
+        numeric price
+        varchar isbn
+        varchar language
+        timestamp publish_date
+        varchar image_url
+        int page
+        numeric rating
+    }
+
+    shopping_carts {
+        uuid id pk 
+        uuid user_id FK
+        uuid book_id FK
+        quantity int 
+        timestamp created_at
+        timestamp updated_at
+        timestamp deleted_at
+    }
+
+    transactions {
+        uuid id PK
+        uuid user_id FK
+        numeric grand_total
+        varchar status
+        varchar invoice_number
+    }
+
+    transaction_items {
+        uuid id PK
+        uuid transaction_id FK
+        uuid book_id FK
+        numeric price
+        int quantity
+    }
